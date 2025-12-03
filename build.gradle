@@ -1,0 +1,60 @@
+// 루트에 플러그인 버전을 명시하고
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.8' apply false   // 루트 적용 안함
+    id 'io.spring.dependency-management' version '1.1.7' apply false
+}
+
+// 루트 + 하위 모듈 적용
+allprojects {
+    group = 'kr.co.monolith'
+    version = '0.0.1-SNAPSHOT'
+    description = 'monorepo'
+}
+
+// 하위 모듈만 적용
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-dependencies:3.5.8"
+        }
+    }
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://packages.confluent.io/maven/'
+        }
+        maven {
+            url 'https://maven.pkg.github.com/monolith-rnd/*'
+            credentials {
+                username = System.getenv('PACKAGES_USERNAME')
+                password = System.getenv('PACKAGES_PASSWORD')
+            }
+        }
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
