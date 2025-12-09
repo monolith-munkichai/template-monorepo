@@ -1,6 +1,5 @@
-// 루트에 플러그인 버전을 명시하고
+// 루트에 플러그인 버전을 명시
 plugins {
-    id 'java'
     id 'org.springframework.boot' version '3.5.8' apply false   // 루트 적용 안함
     id 'io.spring.dependency-management' version '1.1.7' apply false
 }
@@ -16,7 +15,9 @@ allprojects {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
 
+    // BOM 은 플러그인이 아니고 버전 목록을 불러오는 데이터집합
     dependencyManagement {
         imports {
             mavenBom "org.springframework.boot:spring-boot-dependencies:3.5.8"
@@ -50,8 +51,9 @@ subprojects {
     }
 
     dependencies {
-        compileOnly 'org.projectlombok:lombok'
+        implementation 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
     }
 
     test {

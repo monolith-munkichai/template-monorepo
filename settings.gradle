@@ -1,3 +1,4 @@
 rootProject.name = 'monorepo'
-include 'common'
-include 'cju-ticket-api'
+include 'module-core'
+include 'module-cju-api'
+include 'module-icn-api'
